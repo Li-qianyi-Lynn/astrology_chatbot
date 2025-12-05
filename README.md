@@ -12,6 +12,7 @@ pinned: false
 # 🌟 Astrology Chatbot
 
 Powered by Fine-tuned Phi-2 with Zodiac Personalization
+Link: https://huggingface.co/spaces/Lynnqy/astrology_chatbot
 
 ## Overview
 
