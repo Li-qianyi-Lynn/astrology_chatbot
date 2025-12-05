@@ -149,7 +149,7 @@ def submit_and_clear(message, zodiac, topic, history, max_tok, temp):
     return new_history, ""
 
 # Create Gradio interface
-with gr.Blocks(title="Astrology Chatbot", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="Astrology Chatbot") as demo:
     gr.Markdown("# 🌟 Astrology Chatbot\n### Powered by Fine-tuned Phi-2 with Zodiac Personalization")
 
     with gr.Row():
