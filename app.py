@@ -15,9 +15,16 @@ from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_tr
 
 # Download NLTK data
 try:
-    nltk.data.find('tokenizers/punkt')
-except:
-    nltk.download('punkt', quiet=True)
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    try:
+        nltk.download('punkt_tab', quiet=True)
+    except:
+        # Fallback to old punkt if punkt_tab fails
+        try:
+            nltk.data.find('tokenizers/punkt')
+        except LookupError:
+            nltk.download('punkt', quiet=True)
 
 print("=" * 70)
 print("🌟 Astrology Chatbot - Loading Model")
@@ -207,4 +214,4 @@ with gr.Blocks(title="Astrology Chatbot") as demo:
     clear_btn.click(lambda: [], outputs=chatbot)
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    demo.queue().launch(share=True)
