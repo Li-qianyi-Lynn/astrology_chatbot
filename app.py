@@ -3,6 +3,7 @@
 
 import torch
 import json
+import os
 import gradio as gr
 import nltk
 from nltk.tokenize import sent_tokenize
@@ -148,7 +149,22 @@ You are an astrology advisor. The user is a {zodiac}. Provide personalized advic
     if not response and raw_response:
         response = raw_response
 
-    return history + [[f"[{zodiac}] {message}", response]]
+    # Format for Gradio Chatbot (new format: dicts with 'role' and 'content')
+    user_msg = f"[{zodiac}] {message}"
+    # Convert history to new format if needed
+    if history and len(history) > 0 and isinstance(history[0], list):
+        # Convert old format [["user", "assistant"]] to new format
+        new_history = []
+        for msg_pair in history:
+            if isinstance(msg_pair, list) and len(msg_pair) == 2:
+                new_history.append({"role": "user", "content": msg_pair[0]})
+                new_history.append({"role": "assistant", "content": msg_pair[1]})
+        history = new_history
+    
+    return history + [
+        {"role": "user", "content": user_msg},
+        {"role": "assistant", "content": response}
+    ]
 
 def submit_and_clear(message, zodiac, topic, history, max_tok, temp):
     """Handle submit and clear input"""
@@ -214,4 +230,6 @@ with gr.Blocks(title="Astrology Chatbot") as demo:
     clear_btn.click(lambda: [], outputs=chatbot)
 
 if __name__ == "__main__":
-    demo.queue().launch(share=True)
+    # Check if running on Hugging Face Spaces
+    is_spaces = os.environ.get("SPACE_ID") is not None
+    demo.queue().launch(share=not is_spaces)
